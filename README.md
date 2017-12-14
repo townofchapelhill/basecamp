@@ -1,7 +1,7 @@
-# Library Dashboards
+# Realtime Dashboard Proof of Concept
 
 
-This repository contains html pages that organize information into dashboards for library use.
+Proof of concept for realtime dashboards to be displayed outside of council chambers at Town Hall.
 
 <pre>
  _____ _                      _   _   _ _ _ _ 
