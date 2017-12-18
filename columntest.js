@@ -1,6 +1,6 @@
 /*global $*/
 // initialize variables for interval of refreshing
-var minutes = 15;
+var minutes = 60;
 var milliseconds = min_to_ms(minutes);
 
 // function that converts minutes to milliseconds for use in update_interval function
@@ -8,41 +8,47 @@ function min_to_ms(min) {
     return min*60*1000;
 }
 
-// update meeting data
-function update_meetings() {
-    $.getJSON("https://www.chapelhillopendata.org/api/records/1.0/search/?dataset=meeting-room-usage&rows=1000&sort=time&apikey=" + ODS_api + "&callback=?", function(meeting){
-        // initialize a variable to display the title (today's date) at the top and list of usage data
-        var usage_values = [];
-        
-        // loops through file and adds a row of data to the table after each iteration
-        for (var i = 0; i < meeting.records.length; i++) {
-            var record = meeting.records[i];
-            if(record.fields.date.includes("Reservations")) {
-                usage_values.push(Number(record.fields.time));
-            }
-        }
-        
-        
-        // loops through meeting room id's and adds usage values
-        for (var i = 0; i < usage_values.length; i++) {
-            $('#m' + i).text(usage_values[i]);
-        }
-        
+// update open data block
+function update_open_data() {
+    $.getJSON("https://www.chapelhillopendata.org/api/datasets/1.0/search?rows=1&apikey=" + ODS_api + "&callback=?", function(datasets){
+        // set number of datasets
+        $('#numD').text(datasets.nhits);
     });
+    $.getJSON("https://www.chapelhillopendata.org/api/records/1.0/analyze/?dataset=ods-datasets-monitoring&source=monitoring&y.total_records.expr=records_count&y.total_records.func=SUM&apikey=" + ODS_api + "&callback=?", function(records){
+        // set number of records total
+        $('#numR').text(records[0].total_records);
+    });
+    $.getJSON("https://www.chapelhillopendata.org/api/records/1.0/analyze/?dataset=ods-api-monitoring&source=monitoring&x=user_ip_addr&x=user_id&y.serie1.func=COUNT&apikey=" + ODS_api + "&callback=?", function(users){
+        // set number of users total
+        $('#numU').text(users.length);
+    });
+    
 }
 
-// update library card data
-function update_cards() {
-    $.getJSON("https://www.chapelhillopendata.org/api/records/1.0/search/?dataset=patron-dashboard&rows=1&apikey=" + ODS_api + "&callback=?", function(exp_patron){
-        // save expired amount of cards in variable
-        var amount_exp = exp_patron.nhits;
-        $.getJSON("https://www.chapelhillopendata.org/api/records/1.0/search/?dataset=patrons&rows=1&apikey=" + ODS_api + "&callback=?", function(all_patrons){
-            // save total amount of cards in variable
-            var amount_total = all_patrons.nhits;
-            // add expired amount and calculate percentage
-            $('#library-total').text(amount_total.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ","));
-            $('#library-percent-expired').text((amount_exp/amount_total * 100).toFixed(2));
-        });
+// update permit data
+function update_permits() {
+    $.getJSON("https://www.chapelhillopendata.org/api/records/1.0/download/?dataset=permits&format=json&apikey=" + ODS_api + "&callback=?", function(today){
+        // save counters and current date in variables
+        var m_count = 0;
+        var d_count = 0;
+        var d = new Date();
+        var current_month = d.getMonth() + 1;
+        var current_year = d.getFullYear();
+        var current_day = d.getDate();
+        
+        // loop through data and increment counter accordingly
+        for(var i = 0; i < today.length; i++) {
+            var date = today[i].fields.issue_date.split('/');
+            if(date[0] == current_month && date[2] == current_year) {
+                m_count+=1;
+            }
+            if(date[0] == current_month && date[1] == current_day && date[2] == current_year) {
+                d_count+=1;
+            }
+        
+        }
+        $('#issuedMonth').text(m_count);
+        $('#issuedToday').text(d_count);
     });    
 }
 
@@ -122,11 +128,11 @@ function update_page() {
     /*global ODS_api*/
     /*global circulator_location*/
     
-    // update meeting room info
-    update_meetings();
+    // update Open Data info
+    update_open_data();
     
-    // update library card info
-    update_cards();
+    // update Permit info
+    update_permits();
     
     // update catalog info
     update_catalog_data();
