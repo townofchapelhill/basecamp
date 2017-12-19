@@ -52,55 +52,39 @@ function update_permits() {
     });    
 }
 
-// update number of datasets
-function update_catalog_data() {
-    var temp;
-    $.getJSON("https://www.chapelhillopendata.org/api/records/1.0/search/?dataset=daily-catalog-searches&sort=column_2&apikey=" + ODS_api + "&callback=?", function(dailyCat){
-        // save top searches today in variable
-        temp = dailyCat.records[0].fields.column_1;
-        $('#topCatToday').text(temp);
-    });      
-    $.getJSON("https://www.chapelhillopendata.org/api/records/1.0/search/?dataset=monthly-library-catalog-searches&sort=column_2&apikey=" + ODS_api + "&callback=?", function(monthlyCat){
-        // save top searches this month in variable
-        temp = monthlyCat.records[0].fields.column_1;
-        $('#topCatMonth').text(temp);
-    });   
+// update transit data
+function update_transit() {
+    
 }
 
 // update website data info
 function update_site_data() {
     var variable;
-    $.getJSON("https://www.chapelhillopendata.org/api/records/1.0/search/?dataset=daily-sessions-chpl-website&apikey=" + ODS_api + "&callback=?", function(daily_sessions){
+    $.getJSON("https://www.chapelhillopendata.org/api/records/1.0/search/?dataset=daily-sessions-townofchapelhillorg&sort=column_2&apikey=" + ODS_api + "&callback=?", function(daily_sessions){
         // save amount of sessions today in variable
         variable = daily_sessions.records[0].fields.column_2;
-        $('#sToday').text(variable);
+        $('#sessionsToday').text(variable);
     });
-    $.getJSON("https://www.chapelhillopendata.org/api/records/1.0/search/?dataset=monthly-sessions-chpl-website&apikey=" + ODS_api + "&callback=?", function(monthly_sessions){
+    $.getJSON("https://www.chapelhillopendata.org/api/records/1.0/search/?dataset=monthly-sessions-townofchapelhillorg&sort=column_2&facet=column_1&facet=column_2&apikey=" + ODS_api + "&callback=?", function(monthly_sessions){
         // save amount of sessions this month in variable
         variable = monthly_sessions.records[0].fields.column_2;
-        $('#sMonth').text(variable);
+        $('#sessionsMonth').text(variable);
     });
-    $.getJSON("https://www.chapelhillopendata.org/api/records/1.0/search/?dataset=dailysearch&sort=column_2&apikey=" + ODS_api + "&callback=?", function(daily_search){
+    $.getJSON("https://www.chapelhillopendata.org/api/records/1.0/search/?dataset=daily-searches-townofchapelhillorg&sort=column_2&facet=column_2&apikey=" + ODS_api + "&callback=?", function(daily_search){
         // save top searches today in variable
         variable = daily_search.records[0].fields.column_1;
-        $('#topToday').text(variable);
+        $('#topSearchToday').text(variable);
     });
-    $.getJSON("https://www.chapelhillopendata.org/api/records/1.0/search/?dataset=monthlysearch&sort=column_2&apikey=" + ODS_api + "&callback=?", function(monthly_search){
+    $.getJSON("https://www.chapelhillopendata.org/api/records/1.0/search/?dataset=monthly-searches-townofchapelhillorg&sort=column_2&facet=column_1&facet=column_2&apikey=" + ODS_api + "&callback=?", function(monthly_search){
         // save top searches this month in variable
         variable = monthly_search.records[0].fields.column_1;
-        $('#topMonth').text(variable);
+        $('#topSearchMonth').text(variable);
     });
 }
 
-// update patron info
-function update_patrons() {
-    $.getJSON("https://www.chapelhillopendata.org/api/records/1.0/search/?dataset=patron-data&apikey=" + ODS_api + "&callback=?", function(patron_data){
-        // save average age of unexpired patrons in variable
-        var age = patron_data.records[0].fields.average_age;
-        var blocked = patron_data.records[0].fields.blocked_patrons;
-        $('#avg-age').text(Math.round(age));
-        $('#blocked').text(blocked);
-    });
+// update police info
+function update_police() {
+    
 }
 
 // update items info
@@ -110,14 +94,11 @@ function update_items() {
         // add amount of overdue items to checked out items
         $.getJSON("https://www.chapelhillopendata.org/api/records/1.0/search/?dataset=checked-out-items&rows=1&apikey=" + ODS_api + "&callback=?", function(co_items) {
             total_checked_out = co_items.nhits+od_items.nhits;
-            $('#checked').text(total_checked_out);
+            $('#checkedOut').text(total_checked_out);
             $.getJSON("https://www.chapelhillopendata.org/api/records/1.0/search/?dataset=library-items&rows=1&facet=status&refine.status=AVAILABLE&apikey=" + ODS_api + "&callback=?", function(total_a) {
-                $('#totalAvailable').text(total_a.nhits - total_checked_out);
-                $('#items-percent-out').text((total_checked_out/total_a.nhits*100).toFixed(2));
+                $('#percentOut').text((total_checked_out/total_a.nhits*100).toFixed(2));
             });
         });
-        
-        $('#overdue').text(od_items.nhits);
     });
 }
 
@@ -135,13 +116,13 @@ function update_page() {
     update_permits();
     
     // update catalog info
-    update_catalog_data();
+    //update_transit();
     
     // update website info
     update_site_data();
  
     // update patron info
-    update_patrons();
+    //update_police();
     
     // update items info
     update_items();
