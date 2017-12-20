@@ -2,6 +2,12 @@
 // initialize variables for interval of refreshing
 var minutes = 60;
 var milliseconds = min_to_ms(minutes);
+var monthNames = ["January", "February", "March", "April", "May", "June",
+  "July", "August", "September", "October", "November", "December"];
+var d = new Date();
+var currMonth = d.getMonth();
+$('.currMonth').text(monthNames[currMonth]);
+
 
 // function that converts minutes to milliseconds for use in update_interval function
 function min_to_ms(min) {
@@ -31,6 +37,8 @@ function update_permits() {
         // save counters and current date in variables
         var m_count = 0;
         var d_count = 0;
+        var fm_count = 0;
+        var fd_count = 0;
         var d = new Date();
         var current_month = d.getMonth() + 1;
         var current_year = d.getFullYear();
@@ -39,16 +47,25 @@ function update_permits() {
         // loop through data and increment counter accordingly
         for(var i = 0; i < today.length; i++) {
             var date = today[i].fields.issue_date.split('/');
+            var file_date = today[i].fields.date_filed.split('/');
             if(date[0] == current_month && date[2] == current_year) {
                 m_count+=1;
             }
             if(date[0] == current_month && date[1] == current_day && date[2] == current_year) {
                 d_count+=1;
             }
+            if(file_date[0] == current_month && date[2] == current_year) {
+                fm_count+=1;
+            }
+            if(file_date[0] == current_month && date[1] == current_day && date[2] == current_year) {
+                fd_count+=1;
+            }
         
         }
         $('#issuedMonth').text(m_count);
         $('#issuedToday').text(d_count);
+        $('#filedMonth').text(fm_count);
+        $('#fileToday').text(fd_count);
     });    
 }
 
@@ -99,6 +116,10 @@ function update_items() {
                 $('#percentOut').text((total_checked_out/total_a.nhits*100).toFixed(2));
             });
         });
+    });
+    // add active patrons
+    $.getJSON("https://www.chapelhillopendata.org/api/records/1.0/search/?dataset=activepatrons&rows=1&apikey=" + ODS_api + "&callback=?", function(ap) {
+        $('#activeP').text(ap.nhits);
     });
 }
 
