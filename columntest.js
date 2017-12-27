@@ -24,9 +24,11 @@ function update_open_data() {
         // set number of records total
         $('#numR').text(records[0].total_records);
     });
-    $.getJSON("https://www.chapelhillopendata.org/api/records/1.0/analyze/?dataset=ods-api-monitoring&source=monitoring&x=user_ip_addr&x=user_id&y.serie1.func=COUNT&apikey=" + ODS_api + "&callback=?", function(users){
+    $.getJSON("https://www.chapelhillopendata.org/api/records/1.0/analyze/?dataset=ods-api-monitoring&q=user_id:anonymous&source=monitoring&x=user_ip_addr&y.serie1.func=COUNT&apikey=" + ODS_api + "&callback=?", function(anon_users){
+        $.getJSON("https://www.chapelhillopendata.org/api/records/1.0/analyze/?dataset=ods-api-monitoring&q=not+user_id:anonymous&source=monitoring&x=user_id&y.serie1.func=COUNT&apikey="  + ODS_api + "&callback=?", function(users){
         // set number of users total
-        $('#numU').text(users.length);
+        $('#numU').text(anon_users.length + users.length);
+        });
     });
     
 }
