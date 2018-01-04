@@ -6,6 +6,7 @@ var monthNames = ["January", "February", "March", "April", "May", "June",
   "July", "August", "September", "October", "November", "December"];
 var d = new Date();
 var currMonth = d.getMonth();
+var currDay = d.getDay();
 $('.currMonth').text(monthNames[currMonth]);
 
 
@@ -73,7 +74,11 @@ function update_permits() {
 
 // update transit data
 function update_transit() {
-    
+    // update active routes today
+    var active_routes = [2, 24, 24, 24, 27, 27, 11];
+    var in_service = [2, 100, 100, 100, 128, 128, 11];
+    $('#activeR').text(active_routes[currDay]);
+    $('#inService').text(in_service[currDay]);
 }
 
 // update website data info
@@ -139,7 +144,7 @@ function update_page() {
     update_permits();
     
     // update catalog info
-    //update_transit();
+    update_transit();
     
     // update website info
     update_site_data();
