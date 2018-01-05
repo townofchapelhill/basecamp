@@ -31,11 +31,10 @@ function update_open_data() {
         $('#numU').text(anon_users.length + users.length);
         });
     });
-    
 }
 
-// update permit data
-function update_permits() {
+// update permit data & transit data
+function update_permits_transit() {
     $.getJSON("https://www.chapelhillopendata.org/api/records/1.0/download/?dataset=permits&format=json&apikey=" + ODS_api + "&callback=?", function(today){
         // save counters and current date in variables
         var m_count = 0;
@@ -68,18 +67,16 @@ function update_permits() {
         $('#issuedMonth').text(m_count);
         $('#issuedToday').text(d_count);
         $('#filedMonth').text(fm_count);
-        $('#fileToday').text(fd_count);
+        $('#filedToday').text(fd_count);
+        
+        // update active routes today
+        var active_routes = [2, 24, 24, 24, 27, 27, 11];
+        var in_service = [2, 100, 100, 100, 128, 128, 11];
+        $('#activeR').text(active_routes[currDay]);
+        $('#inService').text(in_service[currDay]);
     });    
 }
 
-// update transit data
-function update_transit() {
-    // update active routes today
-    var active_routes = [2, 24, 24, 24, 27, 27, 11];
-    var in_service = [2, 100, 100, 100, 128, 128, 11];
-    $('#activeR').text(active_routes[currDay]);
-    $('#inService').text(in_service[currDay]);
-}
 
 // update website data info
 function update_site_data() {
@@ -135,22 +132,18 @@ function update_page() {
     // gets local json file
     /*global $*/
     /*global ODS_api*/
-    /*global circulator_location*/
     
     // update Open Data info
     update_open_data();
     
-    // update Permit info
-    update_permits();
-    
-    // update catalog info
-    update_transit();
+    // update Permit and Transit info
+    update_permits_transit();
     
     // update website info
     update_site_data();
  
     // update patron info
-    //update_police();
+    update_police();
     
     // update items info
     update_items();
