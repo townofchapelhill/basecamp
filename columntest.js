@@ -30,6 +30,12 @@ function update_open_data() {
         // set number of users total
         $('#numU').text(anon_users.length + users.length);
         });
+        
+        // update active routes today
+        var active_routes = [2, 24, 24, 24, 27, 27, 11];
+        var in_service = [2, 100, 100, 100, 128, 128, 11];
+        $('#activeR').text(active_routes[currDay]);
+        $('#inService').text(in_service[currDay]);
     });
 }
 
@@ -45,35 +51,34 @@ function update_permits_transit() {
         var current_month = d.getMonth() + 1;
         var current_year = d.getFullYear();
         var current_day = d.getDate();
-        
+        //alert(current_day + " day " +  current_month + " month " + current_year + " year ")
         // loop through data and increment counter accordingly
         for(var i = 0; i < today.length; i++) {
-            var date = today[i].fields.issue_date.split('/');
-            var file_date = today[i].fields.date_filed.split('/');
-            if(date[0] == current_month && date[2] == current_year) {
-                m_count+=1;
+            try{
+                var date = today[i].fields.issue_date.split('/');
+                var file_date = today[i].fields.date_filed.split('/');
+                
+                if(date[0] == current_month && date[2] == current_year) {
+                    m_count+=1;
+                }
+                if(date[0] == current_month && date[1] == current_day && date[2] == current_year) {
+                    d_count+=1;
+                }
+                if(file_date[0] == current_month && file_date[2] == current_year) {
+                    fm_count+=1;
+                }
+                if(file_date[0] == current_month && file_date[1] == current_day && file_date[2] == current_year) {
+                    fd_count+=1;
+                }
+            }catch(e) {
+                continue;
             }
-            if(date[0] == current_month && date[1] == current_day && date[2] == current_year) {
-                d_count+=1;
-            }
-            if(file_date[0] == current_month && date[2] == current_year) {
-                fm_count+=1;
-            }
-            if(file_date[0] == current_month && date[1] == current_day && date[2] == current_year) {
-                fd_count+=1;
-            }
-        
         }
+        
         $('#issuedMonth').text(m_count);
         $('#issuedToday').text(d_count);
         $('#filedMonth').text(fm_count);
         $('#filedToday').text(fd_count);
-        
-        // update active routes today
-        var active_routes = [2, 24, 24, 24, 27, 27, 11];
-        var in_service = [2, 100, 100, 100, 128, 128, 11];
-        $('#activeR').text(active_routes[currDay]);
-        $('#inService').text(in_service[currDay]);
     });    
 }
 
