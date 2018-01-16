@@ -33,7 +33,7 @@ function update_od_transit_police() {
         
         // update transit info
         var active_routes = [2, 24, 24, 24, 27, 27, 11];
-        var in_service = [2, 100, 100, 100, 128, 128, 11];
+        var in_service = [2, 100, 98, 100, 128, 128, 11];
         $('#activeR').text(active_routes[currDay]);
         $('#inService').text(in_service[currDay]);
         
@@ -155,7 +155,7 @@ function update_page() {
     var offset = -300;
     var estDate = new Date(d.getTime() + offset*60*1000);
     var uDate = estDate.toUTCString().replace('GMT', '');
-    $('#stamp').text('Updated: ' + uDate);
+    $('#stamp').text('Updated: ' + uDate + ' - Prototype - Revision 1');
 }
 
 // function that calls update_page every specified minutes
