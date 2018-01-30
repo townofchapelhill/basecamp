@@ -111,7 +111,7 @@ function update_transit() {
         for(var i = 0; i < buses.records.length; i++){
             totalSpeed += buses.records[i].fields.speed_km_hr;
         }
-        $('#avgSpeed').text(totalSpeed/buses.records.length);
+        $('#avgSpeed').text((totalSpeed/buses.records.length)*0.6214);
     });
 }
 
@@ -136,7 +136,7 @@ function update_site_data() {
     $.getJSON("https://www.chapelhillopendata.org/api/records/1.0/search/?dataset=monthly-searches-townofchapelhillorg&sort=column_2&facet=column_1&facet=column_2&apikey=" + ODS_api + "&callback=?", function(monthly_search){
         // save top searches this month in variable
         variable = monthly_search.records[0].fields.column_1;
-        $('#topSearchMonth').text(variable);
+        $('#topSearchMonth').text(variable.slice(1,-1));
     });
 }
 
