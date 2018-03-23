@@ -1,3 +1,3 @@
 # basecamp
 
-displays data on basecamp projects, teams, and todos.
+displays data on basecamp projects, teams, schedule entries and todos.
