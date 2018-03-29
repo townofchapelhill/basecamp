@@ -1,3 +1,9 @@
+######################################################
+##This script posts all schedule entries in the     ##
+##Friendly Robot account's teams into the Automation##
+##for the people's schedule                         ##
+######################################################
+
 import requests
 import json
 import csv
