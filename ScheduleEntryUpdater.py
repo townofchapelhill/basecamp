@@ -18,6 +18,7 @@ print(str(now) + '\n')
 # use token and send request to get json response of projects & teams
 token = secrets.basecamp_access
 
+# access list of projects for account associated with token
 project_url = "https://3.basecampapi.com/3472161/projects.json"
 request = requests.get(project_url, headers={
     "Authorization": "Bearer " + token,
