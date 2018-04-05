@@ -1,3 +1,8 @@
+##############################################
+# This program prints all the todos/todosets #
+# for a specified team.                      #
+##############################################
+
 import requests
 import json
 import csv
@@ -11,7 +16,11 @@ print(str(now) + '\n')
 
 # use token and send request to get json response of todo sets
 token = secrets.basecamp_access
-request = requests.get("https://3.basecampapi.com/3472161/buckets/2528552/todosets/365963496/todolists.json", headers={
+
+# url is for CHOD team
+url = "https://3.basecampapi.com/3472161/buckets/2528552/todosets/365963496/todolists.json"
+
+request = requests.get(url, headers={
     "Authorization": "Bearer " + token,
     "user-agent": "Town of Chapel Hill Basecamp Integration (snguyen@townofchapelhill.org)"
 })

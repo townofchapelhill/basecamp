@@ -1,3 +1,9 @@
+#####################################
+# This program downloads all        # 
+# documents in each team and places #
+# them in appropriate folders.      #
+#####################################
+
 import requests
 import json
 import datetime

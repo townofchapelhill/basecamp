@@ -1,3 +1,9 @@
+#####################################
+# This program sends a message      #
+# to the Automation for the People  #
+# campfire.                         #
+#####################################
+
 import requests
 import json
 import csv
