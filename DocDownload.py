@@ -2,31 +2,13 @@ import requests
 import json
 import datetime
 import secrets
+import os
 
 # use token and send request to get json response of projects & teams
 token = secrets.basecamp_access
 
 # check vault function 
-def check_vault(doc):
-    # check if there are documents in each container
-    # print(doc["documents_count"])
-    # if doc["documents_count"] != 0:
-    #     docs_url = doc["documents_url"]
-    #     docs_request = requests.get(docs_url, headers ={
-    #         "Authorization": "Bearer " + token,
-    #         "user-agent": "Town of Chapel Hill Basecamp Integration (snguyen@townofchapelhill.org)"
-    #     })
-    #     docs = json.loads(docs_request.text)
-    #     print(len(docs))
-    #     for j in range(len(docs)):
-    #         print(j)
-    #         download = requests.get(docs[j]["downloads_url"], headers={
-    #             "Authorization": "Bearer " + token,
-    #             "user-agent": "Town of Chapel Hill Basecamp Integration (snguyen@townofchapelhill.org)"
-    #         })
-              
-    #         with open(docs[j]["filename"], 'wb') as f:
-    #             f.write(download.content)
+def check_vault(doc, folder):
     
     if doc["uploads_count"] != 0:
         uploads_url = doc["uploads_url"]
@@ -42,7 +24,7 @@ def check_vault(doc):
                 "user-agent": "Town of Chapel Hill Basecamp Integration (snguyen@townofchapelhill.org)"
             })
               
-            with open(uploads[k]["filename"], 'wb') as f:
+            with open(folder+'/'+uploads[k]["filename"], 'wb') as f:
                 f.write(download.content)
         
         
@@ -55,7 +37,7 @@ def check_vault(doc):
         vaults = json.loads(vaults_request.text)
         
         for l in range(len(vaults)):
-            check_vault(vaults[l])
+            check_vault(vaults[l], folder)
 
 def main():            
     # get current timestamp
@@ -77,6 +59,12 @@ def main():
     # loop through projects/teams
     for i in range(len(projects)):
         print(projects[i]["name"])
+        project_name = projects[i]["name"]
+        
+        # make folder for team if it doesn't already exist
+        if not os.path.isdir(project_name):
+            os.mkdir(project_name)
+            
         # access list of documents for account associated with token in team at index i
         doc_url = projects[i]["dock"][5]["url"]
         doc_request = requests.get(doc_url, headers={
@@ -88,6 +76,6 @@ def main():
         documents = json.loads(doc_request.text)
         
         # call function to check vault
-        check_vault(documents)
+        check_vault(documents, project_name)
 
 main()
