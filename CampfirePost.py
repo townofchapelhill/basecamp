@@ -22,6 +22,9 @@ global_token = secrets.friendly_access
 # manually change depending on which team campfire to message (refer to example urls)
 campfire_url="https://3.basecampapi.com/3472161/buckets/6505832/chats/899540284/lines.json"
 
+# refresh url - manually change refresh token based on desired account
+refresh_url = "https://launchpad.37signals.com/authorization/token?type=refresh&refresh_token="+secrets.friendly_refresh+"&client_id=c51ec567174bffb69861a58385705a9140f35538&redirect_uri=http://www.townofchapelhill.org&client_secret="+secrets.client_secret
+
 # get json of projects/teams function
 def get_projects(token):
     project_url = "https://3.basecampapi.com/3472161/projects.json"
@@ -53,7 +56,6 @@ def main():
     
     # check if access token has expired
     if 'error' in projects:
-        refresh_url = "https://launchpad.37signals.com/authorization/token?type=refresh&refresh_token="+secrets.test_refresh+"&client_id=c51ec567174bffb69861a58385705a9140f35538&redirect_uri=http://www.townofchapelhill.org&client_secret="+secrets.client_secret
         header = {"Content-Type": "application/json"}
         refresh_request = requests.post(refresh_url, headers=header)
         token = json.loads(refresh_request.text)["access_token"]
